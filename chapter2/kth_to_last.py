@@ -17,11 +17,13 @@ def kth_last(linkedlist, kth):
     want_node = count - kth + 1
     print(want_node)
     print(count)
-    if want_node <= 0:
+    if want_node <= 0 or want_node > count:
         raise Exception("Number beyound size of linked list.", count)
 
     node = linkedlist.head
     count = 1
+    if count == want_node:
+        print("Kth to last,", node.data)
     while(node.next is not None):
         node = node.next
         count += 1
@@ -34,5 +36,5 @@ if __name__ == "__main__":
     test_list.head.append_to_tail(30) 
     test_list.head.append_to_tail(40) 
     test_list.head.append_to_tail(50)
-    kth_last(test_list, 3)
-    # 
+    kth_last(test_list, 5)
+    
