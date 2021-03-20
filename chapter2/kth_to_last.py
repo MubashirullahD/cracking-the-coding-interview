@@ -8,7 +8,7 @@ def kth_last(linkedlist, kth):
     """
     2N approach
     """
-    node = linkedlist.head
+    node = linkedlist.top
     count = 1   # Assume one node does exist
 
     while(node.next is not None):
@@ -22,7 +22,7 @@ def kth_last(linkedlist, kth):
     if want_node <= 0 or want_node > count:
         raise Exception("Number beyound size of linked list.", count)
 
-    node = linkedlist.head
+    node = linkedlist.top
     count = 1
     if count == want_node:
         print("Kth to last,", node.data)
@@ -56,8 +56,8 @@ def kth_last_two_pointer(linkedlist, kth):
     """
     O(N)
     """
-    p1 = linkedlist.head
-    p2 = linkedlist.head
+    p1 = linkedlist.top
+    p2 = linkedlist.top
     for _ in range(kth):
         p2 = p2.next
 
@@ -78,11 +78,11 @@ def kth_last_two_pointer(linkedlist, kth):
 
 if __name__ == "__main__":
     test_list = linkedlist(10)
-    test_list.head.append_to_tail(20)
-    test_list.head.append_to_tail(30) 
-    test_list.head.append_to_tail(40) 
-    test_list.head.append_to_tail(50)
+    test_list.top.append_to_tail(20)
+    test_list.top.append_to_tail(30)
+    test_list.top.append_to_tail(40)
+    test_list.top.append_to_tail(50)
     kth_last(test_list, 1)
-    kth_last_recursive(test_list.head, 1)
+    kth_last_recursive(test_list.top, 1)
     kth_last_two_pointer(test_list, 1)
     
