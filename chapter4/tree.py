@@ -9,6 +9,7 @@ class BinaryTreeNode:
         self.data = data
         self.left = None
         self.right = None
+        self.top = None
 
 class BinarySearchTree:
     def __init__(self, data):
@@ -51,6 +52,183 @@ class BinarySearchTree:
             print(node.data)
 
 
+from queue import Queue
+
+
+class MinHeap:
+    def __init__(self, data):
+        self.root = BinaryTreeNode(data)
+
+    def insert(self, data):
+        # Part 1 insert in right place
+        queue = Queue(0)
+        queue.put(self.root)
+        while not queue.empty():
+            node = queue.get()
+            if node.left is None:
+                node.left = BinaryTreeNode(data)
+                node.left.top = node
+                node = node.left
+                break
+            elif node.right is None:
+                node.right = BinaryTreeNode(data)
+                node.right.top = node
+                node = node.right
+                break
+            else:
+                queue.put(node.left)
+                queue.put(node.right)
+
+        # Part 2 bubble to right place
+        while node.top is not None:
+            if node.data <= node.top.data:
+                node.data, node.top.data = node.top.data, node.data
+                node = node.top
+            else:
+                break
+
+    def extract_min(self):
+        # Part 1 take data
+        if self.root is None:
+            print("Nothing left")
+            return
+        data = self.root.data
+        # Part 2 fix the tree
+        # Finding the bottommost, rightmost element
+        # Last item on Queue
+        queue = Queue(0)
+        queue.put(self.root)
+        while not queue.empty():
+            node = queue.get()
+            if node.left is not None:
+                queue.put(node.left)
+            if node.right is not None:
+                queue.put(node.right)
+        # switch to the top
+        self.root.data = node.data
+
+        # Cut that node
+        node = node.top
+        if node.right is not None and self.root.data == node.right.data:
+            node.right = None
+        elif node.left is not None and self.root.data == node.left.data:
+            node.left = None
+
+        # Bubble down
+        node = self.root
+        while True:
+            left_data = node.left.data if node.left is not None else float("inf")
+            right_data = node.right.data if node.right is not None else float("inf")
+            # print("left", left_data)
+            # print("right", right_data)
+
+            if left_data <= right_data:
+                # print("left < right")
+                if node.data >= left_data:
+                    # print("exchange happened")
+                    node.data, node.left.data = node.left.data, node.data
+                    node = node.left
+                else:
+                    break
+            else:
+                # print("right < left")
+                if node.data >= right_data:
+                    # print("exchange happened")
+                    node.data, node.right.data = node.right.data, node.data
+                    node = node.right
+                else:
+                    break
+
+        return data
+
+
+class MaxHeap:
+    def __init__(self, data):
+        self.root = BinaryTreeNode(data)
+
+    def insert(self, data):
+        # Part 1 insert in right place
+        queue = Queue(0)
+        queue.put(self.root)
+        while not queue.empty():
+            node = queue.get()
+            if node.left is None:
+                node.left = BinaryTreeNode(data)
+                node.left.top = node
+                node = node.left
+                break
+            elif node.right is None:
+                node.right = BinaryTreeNode(data)
+                node.right.top = node
+                node = node.right
+                break
+            else:
+                queue.put(node.left)
+                queue.put(node.right)
+
+        # Part 2 bubble to right place
+        while node.top is not None:
+            if node.data >= node.top.data:
+                node.data, node.top.data = node.top.data, node.data
+                node = node.top
+            else:
+                break
+
+    def extract_max(self):
+        # Part 1 take data
+        if self.root is None:
+            print("Nothing left")
+            return
+        data = self.root.data
+        # Part 2 fix the tree
+        # Finding the bottommost, rightmost element
+        # Last item on Queue
+        queue = Queue(0)
+        queue.put(self.root)
+        while not queue.empty():
+            node = queue.get()
+            if node.left is not None:
+                queue.put(node.left)
+            if node.right is not None:
+                queue.put(node.right)
+        # switch to the top
+        self.root.data = node.data
+
+        # Cut that node
+        node = node.top
+        if node.right is not None and self.root.data == node.right.data:
+            node.right = None
+        elif node.left is not None and self.root.data == node.left.data:
+            node.left = None
+
+        # Bubble down
+        node = self.root
+        while True:
+            left_data = node.left.data if node.left is not None else 0
+            right_data = node.right.data if node.right is not None else 0
+            # print("left", left_data)
+            # print("right", right_data)
+
+            if left_data >= right_data:
+                # print("left > right")
+                if node.data <= left_data:
+                    # print("exchange happened")
+                    node.data, node.left.data = node.left.data, node.data
+                    node = node.left
+                else:
+                    break
+            else:
+                # print("right > left")
+                if node.data <= right_data:
+                    # print("exchange happened")
+                    node.data, node.right.data = node.right.data, node.data
+                    node = node.right
+                else:
+                    break
+
+        return data
+
+
 
 if __name__ == "__main__":
     _list = [8, 4, 10, 2, 6, 20]
@@ -73,6 +251,40 @@ if __name__ == "__main__":
     BST.p_pre_order(BST.root)
     print("Post order")
     BST.p_post_order(BST.root)
+
+    _list = [4, 50, 7, 55, 90, 87]
+    MH = MinHeap(_list[0])
+    inc = 1
+    while inc < len(_list):
+        MH.insert(_list[inc])
+        inc += 1
+    print("Manual MinHeap checking")
+    print("root", MH.root.data)
+    print("root.left", MH.root.left.data)
+    print("50's child.left", MH.root.left.left.data)
+    print("50's child.right", MH.root.left.right.data)
+    print("root.right", MH.root.right.data)
+    print("7's child.left", MH.root.right.left.data)
+    #print("7's child.right", MH.root.right.right.data) Does not exist at the moment
+    MH.insert(2)
+    print("Manual MinHeap checking after inserting 2")
+    print("root", MH.root.data)
+    print("root.left", MH.root.left.data)
+    print("50's child.left", MH.root.left.left.data)
+    print("50's child.right", MH.root.left.right.data)
+    print("root.right", MH.root.right.data)
+    print("4's child.left", MH.root.right.left.data)
+    print("4's child.right", MH.root.right.right.data)
+    print("Extract minimum")
+    print("minimum =", MH.extract_min())
+    print("new root", MH.root.data)
+    print("root.left", MH.root.left.data)
+    print("50's child.left", MH.root.left.left.data)
+    print("50's child.right", MH.root.left.right.data)
+    print("root.right", MH.root.right.data)
+    print("7's child.left", MH.root.right.left.data)
+    # print("7's child.right", MH.root.right.right.data) Got cut
+
 
 
 

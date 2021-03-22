@@ -87,6 +87,44 @@ def sort_stack(stack: Stack):
         stack.push(values)
 
 
+from chapter4.tree import BinarySearchTree, BinaryTreeNode
+
+
+def smallest_in_BST_iterative(bst: BinarySearchTree):
+    node = bst.root
+    while node.left is not None:
+        node = node.left
+    print(node.data)
+    return node.data
+
+from chapter4.tree import MinHeap, MaxHeap
+
+def k_smallest_element(_list: list, k):
+    """
+    Find k smallest elements in a list
+    """
+    MH = MinHeap(_list[0])
+    for val in _list[1:]:
+        MH.insert(val)
+
+    return_list = []
+    for _ in range(k):
+        return_list.append(MH.extract_min())
+    return return_list
+
+
+def k_largest_element(_list: list, k):
+    """
+    Find k largest elements in an array
+    """
+    MH = MaxHeap(_list[0])
+    for val in _list[1:]:
+        MH.insert(val)
+
+    return_list = []
+    for _ in range(k):
+        return_list.append(MH.extract_max())
+    return return_list
 
 if __name__ == "__main__":
     array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -114,3 +152,17 @@ if __name__ == "__main__":
     while not test_stack.is_empty():
         stack_dump.append(test_stack.pop())
     print("Stack items", stack_dump)
+    print("Smallest number in BST")
+    _list = [8, 4, 10, 2, 6, 20]
+    BST = BinarySearchTree(_list[0])
+    inc = 1
+    while inc < len(_list):
+        BST.add(_list[inc])
+        inc +=1
+    smallest_in_BST_iterative(BST)
+
+    _list = [4, 50, 7, 55, 90, 87]
+    print("Finding k smallest and largest values in this list", _list)
+    print("3 smallest values are:", k_smallest_element(_list, 3))
+    print("3 largest values are:", k_largest_element(_list, 3))
+
