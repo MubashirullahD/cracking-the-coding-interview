@@ -1,9 +1,3 @@
-class Node:
-    def __init__(self, data):
-        self.item = data
-        self.children = []
-
-
 class BinaryTreeNode:
     def __init__(self, data):
         self.data = data
@@ -229,6 +223,48 @@ class MaxHeap:
         return data
 
 
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+
+    def add(self, data):
+        if data not in self.children.keys():
+            self.children[data] = TrieNode()
+
+
+import string
+
+
+class Trie:
+    KEYS = {letter for letter in string.ascii_lowercase}
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def add(self, word):
+        node = self.root
+        for letter in word.lower():
+            if letter in self.KEYS:
+                node.add(letter)
+                node = node.children[letter]
+        node.add("*") # for full stop
+
+    def all_words(self):
+        words = []
+
+        def _recursively_get_words(node, word):
+            for letter in node.children.keys():
+                if letter == "*":
+                    words.append(word)
+                else:
+                    _recursively_get_words(node.children[letter], word + letter)
+
+        _recursively_get_words(self.root, "")
+        return words
+
+    def count_words(self):
+        return len(self.all_words())
+
 
 if __name__ == "__main__":
     _list = [8, 4, 10, 2, 6, 20]
@@ -284,6 +320,16 @@ if __name__ == "__main__":
     print("root.right", MH.root.right.data)
     print("7's child.left", MH.root.right.left.data)
     # print("7's child.right", MH.root.right.right.data) Got cut
+
+    words = ["Hello", "World", "Practice", "Makes", "Perfect"]
+    print("Trie words we have", words)
+    trie_test = Trie()
+    for word in words:
+        trie_test.add(word)
+    print("Return all words", trie_test.all_words())
+    print("Count of all words", trie_test.count_words())
+
+
 
 
 
